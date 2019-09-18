@@ -2,7 +2,7 @@ import React from 'react'
 import { View, Text } from 'react-native'
 import { GUI_BORDER_COLOR, SPACING } from './styles'
 
-const version = (require('../node_modules/react-native-typeskill/package.json') as any).version as string
+const version = (require('../node_modules/@typeskill/typer/package.json') as any).version as string
 
 export const Version = () => (
   <View>
