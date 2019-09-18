@@ -11,7 +11,7 @@ import {
   Document,
   Images,
   CONTROL_SEPARATOR,
-} from 'react-native-typeskill'
+} from '@typeskill/typer'
 import * as ImagePicker from 'expo-image-picker'
 import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons'
 import { editorStyles, ICON_SIZE, ICON_INACTIVE_COLOR, ICON_ACTIVE_COLOR, SPACING } from './styles'

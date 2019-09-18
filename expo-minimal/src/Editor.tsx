@@ -9,7 +9,7 @@ import {
   buildBridge,
   buildEmptyDocument,
   Document,
-} from 'react-native-typeskill'
+} from '@typeskill/typer'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { editorStyles, ICON_SIZE, ICON_INACTIVE_COLOR, ICON_ACTIVE_COLOR, SPACING } from './styles'
 

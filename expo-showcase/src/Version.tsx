@@ -16,7 +16,7 @@ export const Version = () => (
         color: GUI_BORDER_COLOR,
       }}
     >
-      react-native-typeskill@{version} demo
+      @typeskill/typer@{version}
     </Text>
   </View>
 )
