@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Typeskill",
-    "slug": "typeskill",
+    "name": "Typeskill Minimal example",
+    "slug": "typeskill-minimal-example",
     "privacy": "unlisted",
     "sdkVersion": "34.0.0",
     "platforms": [
@@ -13,9 +13,7 @@
     "icon": "./assets/icon.png",
     "description": "Operational-Transform Based (React) Native Rich Text Editor",
     "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#8acec6"
     },
     "updates": {
       "fallbackToCacheTimeout": 0

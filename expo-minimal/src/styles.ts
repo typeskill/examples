@@ -16,6 +16,7 @@ export const editorStyles = StyleSheet.create({
   },
   textStyle: {
     fontFamily: Platform.select({ ios: 'Courier', android: 'monospace' }),
+    fontSize: 12,
   },
   rootContainer: {
     flex: 1,

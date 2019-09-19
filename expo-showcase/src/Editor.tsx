@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, KeyboardAvoidingView, SafeAreaView, PermissionsAndroid } from 'react-native'
+import { View, KeyboardAvoidingView, SafeAreaView, Platform } from 'react-native'
 import {
   Bridge,
   Typer,
@@ -12,10 +12,12 @@ import {
   Images,
   CONTROL_SEPARATOR,
 } from '@typeskill/typer'
+import * as Permissions from 'expo-permissions'
 import * as ImagePicker from 'expo-image-picker'
 import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons'
 import { editorStyles, ICON_SIZE, ICON_INACTIVE_COLOR, ICON_ACTIVE_COLOR, SPACING } from './styles'
 import { Version } from './Version'
+import { PermissionStatus } from 'expo-permissions'
 
 interface State {
   document: Document
@@ -53,12 +55,30 @@ export class Editor extends Component<{}, State> {
     document: buildEmptyDocument(),
   }
 
+  private async askCameraPermission() {
+    const { status } = await Permissions.askAsync(Permissions.CAMERA)
+    if (status !== PermissionStatus.GRANTED) {
+      throw new Error(`Missing Camera permission. Status is: ${status}`)
+    }
+  }
+
+  private async askCameraRollPermission() {
+    const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL)
+    if (status !== PermissionStatus.GRANTED) {
+      throw new Error(`Missing Camera Roll permission. Status is: ${status}`)
+    }
+  }
+
   private pickOneImage = async (options: ImageAction) => {
-    await PermissionsAndroid.request('android.permission.CAMERA')
     let response: ImagePicker.ImagePickerResult
     if (options === 'SELECT_FROM_GALLERY') {
+      if (Platform.OS === 'ios') {
+        await this.askCameraRollPermission()
+      }
       response = await ImagePicker.launchImageLibraryAsync({ mediaTypes: ImagePicker.MediaTypeOptions.Images })
     } else {
+      await this.askCameraPermission()
+      await this.askCameraRollPermission()
       response = await ImagePicker.launchCameraAsync({ mediaTypes: ImagePicker.MediaTypeOptions.Images })
     }
     if (response.cancelled) {
