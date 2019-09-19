@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Typeskill Showcase",
-    "slug": "typeskill-showcase",
+    "name": "Typeskill Debugger",
+    "slug": "typeskill-debugger",
     "privacy": "public",
     "sdkVersion": "34.0.0",
     "platforms": [
@@ -11,9 +11,9 @@
     "version": "0.10.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "description": "Operational-Transform Based (React) Native Rich Text Editor",
+    "description": "Debugger for Typeskill, Operational-Transform Based (React) Native Rich Text Editor",
     "splash": {
-      "backgroundColor": "#8acec6"
+      "backgroundColor": "#ffffff"
     },
     "updates": {
       "fallbackToCacheTimeout": 0

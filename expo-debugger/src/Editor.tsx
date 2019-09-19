@@ -1,23 +1,20 @@
 import React, { Component } from 'react'
-import { View, KeyboardAvoidingView, SafeAreaView, Platform } from 'react-native'
+import { Platform } from 'react-native'
 import {
-  Bridge,
-  Typer,
   Toolbar,
   DocumentControlAction,
   buildVectorIconControlSpec,
-  buildBridge,
-  buildEmptyDocument,
+  GenericControlAction,
   Document,
   Images,
   CONTROL_SEPARATOR,
 } from '@typeskill/typer'
+import { Debugger, DebuggerActions } from '@typeskill/debugger'
 import * as Permissions from 'expo-permissions'
 import * as ImagePicker from 'expo-image-picker'
 import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons'
-import { editorStyles, ICON_SIZE, ICON_INACTIVE_COLOR, ICON_ACTIVE_COLOR, SPACING } from './styles'
-import { Version } from './Version'
 import { PermissionStatus } from 'expo-permissions'
+import { ImageInfo } from 'expo-image-picker/build/ImagePicker.types'
 
 interface State {
   document: Document
@@ -30,7 +27,7 @@ interface ImageSource {
   name: string
 }
 
-function buildMaterialCommunityControlSpec(actionType: DocumentControlAction, name: string, options?: any) {
+function buildMaterialCommunityControlSpec(actionType: GenericControlAction, name: string, options?: any) {
   return buildVectorIconControlSpec(MaterialCommunityIcons as any, actionType, name, options)
 }
 
@@ -46,15 +43,12 @@ const toolbarLayout: Toolbar.Layout = [
   buildMaterialCommunityControlSpec(DocumentControlAction.INSERT_IMAGE_AT_SELECTION, 'camera-image', {
     actionOptions: 'TAKE_PICTURE',
   }),
+  CONTROL_SEPARATOR,
+  buildMaterialCommunityControlSpec(DebuggerActions.COPY_DOCUMENT_SOURCE, 'clipboard-text-outline'),
+  buildMaterialCommunityControlSpec(DebuggerActions.ERASE_DOCUMENT, 'delete-forever-outline'),
 ]
 
 export class Editor extends Component<{}, State> {
-  private bridge: Bridge<ImageSource> = buildBridge()
-
-  public state: State = {
-    document: buildEmptyDocument(),
-  }
-
   private async askCameraPermission() {
     const { status } = await Permissions.askAsync(Permissions.CAMERA)
     if (status !== PermissionStatus.GRANTED) {
@@ -84,13 +78,14 @@ export class Editor extends Component<{}, State> {
     if (response.cancelled) {
       throw new Error('User cancelled.')
     }
+    const imageInfo = response as ImageInfo
     const description: Images.Description<ImageSource> = {
       source: {
-        uri: response.uri,
-        name: response.uri,
+        uri: imageInfo.uri,
+        name: imageInfo.uri,
       },
-      width: response.width,
-      height: response.height,
+      width: imageInfo.width,
+      height: imageInfo.height,
     }
     return description
   }
@@ -100,34 +95,6 @@ export class Editor extends Component<{}, State> {
   }
 
   public render() {
-    return (
-      <SafeAreaView style={editorStyles.rootContainer}>
-        <KeyboardAvoidingView style={editorStyles.flex} enabled>
-          <Version />
-          <View style={editorStyles.typerContainer}>
-            <Typer
-              document={this.state.document}
-              spacing={SPACING}
-              onDocumentUpdate={this.handleOnDocumentUpdate}
-              documentStyle={editorStyles.typerContent}
-              textStyle={editorStyles.textStyle}
-              bridge={this.bridge}
-              maxMediaBlockHeight={300}
-            />
-          </View>
-          <Toolbar
-            iconSize={ICON_SIZE}
-            activeButtonColor={ICON_ACTIVE_COLOR}
-            inactiveButtonColor={ICON_INACTIVE_COLOR}
-            separatorColor="transparent"
-            document={this.state.document}
-            layout={toolbarLayout}
-            contentContainerStyle={editorStyles.toolbarContainer}
-            bridge={this.bridge}
-            pickOneImage={this.pickOneImage}
-          />
-        </KeyboardAvoidingView>
-      </SafeAreaView>
-    )
+    return <Debugger pickOneImage={this.pickOneImage} toolbarLayout={toolbarLayout} />
   }
 }
