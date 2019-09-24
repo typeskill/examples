@@ -8,7 +8,7 @@
       "ios",
       "android"
     ],
-    "version": "0.10.1",
+    "version": "0.10.2",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "description": "Debugger for Typeskill, Operational-Transform Based (React) Native Rich Text Editor",

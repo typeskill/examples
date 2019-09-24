@@ -69,7 +69,7 @@ export class Editor extends Component<{}, State> {
     }
   }
 
-  private pickOneImage = async (options: ImageAction) => {
+  private pickOneImage = async (options?: ImageAction) => {
     let response: ImagePicker.ImagePickerResult
     if (options === 'SELECT_FROM_GALLERY') {
       if (Platform.OS === 'ios') {
@@ -102,20 +102,19 @@ export class Editor extends Component<{}, State> {
   public render() {
     return (
       <SafeAreaView style={editorStyles.rootContainer}>
-        <KeyboardAvoidingView style={editorStyles.flex} enabled>
+        <KeyboardAvoidingView behavior={Platform.OS === 'android' ? undefined : 'padding'} style={editorStyles.flex} enabled>
           <Version />
           <View style={editorStyles.typerContainer}>
             <Typer
               document={this.state.document}
               spacing={SPACING}
               onDocumentUpdate={this.handleOnDocumentUpdate}
-              documentStyle={editorStyles.typerContent}
               textStyle={editorStyles.textStyle}
               bridge={this.bridge}
               maxMediaBlockHeight={300}
             />
           </View>
-          <Toolbar
+          <Toolbar<ImageSource, ImageAction>
             iconSize={ICON_SIZE}
             activeButtonColor={ICON_ACTIVE_COLOR}
             inactiveButtonColor={ICON_INACTIVE_COLOR}

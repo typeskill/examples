@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, KeyboardAvoidingView, SafeAreaView } from 'react-native'
+import { View, KeyboardAvoidingView, SafeAreaView, Platform } from 'react-native'
 import {
   Bridge,
   Typer,
@@ -29,15 +29,10 @@ interface State {
 }
 
 export class Editor extends Component<{}, State> {
-  private bridge: Bridge<any>
+  private bridge: Bridge<any> = buildBridge()
 
   public state: State = {
     document: buildEmptyDocument(),
-  }
-
-  public constructor(props: {}) {
-    super(props)
-    this.bridge = buildBridge()
   }
 
   public handleOnDocumentUpdate = (document: Document) => {
@@ -47,7 +42,7 @@ export class Editor extends Component<{}, State> {
   public render() {
     return (
       <SafeAreaView style={editorStyles.rootContainer}>
-        <KeyboardAvoidingView style={editorStyles.flex} enabled>
+        <KeyboardAvoidingView behavior={Platform.OS === 'android' ? undefined : 'padding'} style={editorStyles.flex} enabled>
           <View style={editorStyles.typerContainer}>
             <Typer
               document={this.state.document}
