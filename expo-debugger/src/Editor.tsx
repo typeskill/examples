@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Platform, SafeAreaView } from 'react-native'
+import { Platform, SafeAreaView, View } from 'react-native'
 import {
   Toolbar,
   DocumentControlAction,
@@ -100,9 +100,7 @@ export class Editor extends Component<{}, State> {
 
   public render() {
     return (
-      <SafeAreaView style={rootStyle}>
-        <Debugger pickOneImage={this.pickOneImage} toolbarLayout={toolbarLayout} />
-      </SafeAreaView>
+      <Debugger pickOneImage={this.pickOneImage} toolbarLayout={toolbarLayout} />
     )
   }
 }
