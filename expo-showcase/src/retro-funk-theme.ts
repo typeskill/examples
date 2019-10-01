@@ -9,8 +9,7 @@ export const GUI_BORDER_COLOR = '#6c809a'
 export const GUI_BORDER_WIDTH = 2
 export const ICON_SIZE = 25
 export const SPACING = 10
-
-export const editorStyles = StyleSheet.create({
+export const theme = StyleSheet.create({
   flex: {
     flex: 1,
   },

@@ -11,7 +11,7 @@ import {
   Document,
 } from '@typeskill/typer'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
-import { editorStyles, ICON_SIZE, ICON_INACTIVE_COLOR, ICON_ACTIVE_COLOR, SPACING } from './styles'
+import { soberTheme, ICON_SIZE, ICON_INACTIVE_COLOR, ICON_ACTIVE_COLOR, SPACING } from './styles'
 
 function buildMaterialControlSpec(actionType: DocumentControlAction, name: string) {
   return buildVectorIconControlSpec(MaterialCommunityIcons as any, actionType, name)
@@ -41,16 +41,16 @@ export class Editor extends Component<{}, State> {
 
   public render() {
     return (
-      <SafeAreaView style={editorStyles.rootContainer}>
-        <KeyboardAvoidingView behavior={Platform.OS === 'android' ? undefined : 'padding'} style={editorStyles.flex} enabled>
-          <View style={editorStyles.typerContainer}>
+      <SafeAreaView style={soberTheme.rootContainer}>
+        <KeyboardAvoidingView behavior={Platform.OS === 'android' ? undefined : 'padding'} style={soberTheme.flex} enabled>
+          <View style={soberTheme.typerContainer}>
             <Typer
               document={this.state.document}
               spacing={SPACING}
               onDocumentUpdate={this.handleOnDocumentUpdate}
-              documentStyle={editorStyles.typerContent}
-              textStyle={editorStyles.textStyle}
+              textStyle={soberTheme.textStyle}
               bridge={this.bridge}
+              maxMediaBlockHeight={300}
             />
           </View>
           <Toolbar
@@ -59,7 +59,7 @@ export class Editor extends Component<{}, State> {
             inactiveButtonColor={ICON_INACTIVE_COLOR}
             document={this.state.document}
             layout={toolbarLayout}
-            contentContainerStyle={editorStyles.toolbarContainer}
+            contentContainerStyle={soberTheme.toolbarContainer}
             bridge={this.bridge}
           />
         </KeyboardAvoidingView>

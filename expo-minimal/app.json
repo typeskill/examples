@@ -13,7 +13,7 @@
     "icon": "./assets/icon.png",
     "description": "Operational-Transform Based (React) Native Rich Text Editor",
     "splash": {
-      "backgroundColor": "#8acec6"
+      "backgroundColor": "#ffffff"
     },
     "updates": {
       "fallbackToCacheTimeout": 0

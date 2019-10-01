@@ -15,7 +15,7 @@ import {
 import * as Permissions from 'expo-permissions'
 import * as ImagePicker from 'expo-image-picker'
 import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons'
-import { editorStyles, ICON_SIZE, ICON_INACTIVE_COLOR, ICON_ACTIVE_COLOR, SPACING } from './styles'
+import { theme, ICON_SIZE, ICON_INACTIVE_COLOR, ICON_ACTIVE_COLOR, SPACING } from './retro-funk-theme' // './sober-theme'
 import { Version } from './Version'
 import { PermissionStatus } from 'expo-permissions'
 
@@ -101,15 +101,15 @@ export class Editor extends Component<{}, State> {
 
   public render() {
     return (
-      <SafeAreaView style={editorStyles.rootContainer}>
-        <KeyboardAvoidingView behavior={Platform.OS === 'android' ? undefined : 'padding'} style={editorStyles.flex} enabled>
+      <SafeAreaView style={theme.rootContainer}>
+        <KeyboardAvoidingView behavior={Platform.OS === 'android' ? undefined : 'padding'} style={theme.flex} enabled>
           <Version />
-          <View style={editorStyles.typerContainer}>
+          <View style={theme.typerContainer}>
             <Typer
               document={this.state.document}
               spacing={SPACING}
               onDocumentUpdate={this.handleOnDocumentUpdate}
-              textStyle={editorStyles.textStyle}
+              textStyle={theme.textStyle}
               bridge={this.bridge}
               maxMediaBlockHeight={300}
             />
@@ -121,7 +121,7 @@ export class Editor extends Component<{}, State> {
             separatorColor="transparent"
             document={this.state.document}
             layout={toolbarLayout}
-            contentContainerStyle={editorStyles.toolbarContainer}
+            contentContainerStyle={theme.toolbarContainer}
             bridge={this.bridge}
             pickOneImage={this.pickOneImage}
           />
