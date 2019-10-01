@@ -15,8 +15,8 @@
     "@typeskill/debugger": "^0.10.7",
     "@typeskill/typer": "^0.10.0-beta.19",
     "expo": "^35.0.0",
-    "expo-constants": "^6.0.0",
-    "expo-image-picker": "^6.0.0",
+    "expo-constants": "^7.0.0",
+    "expo-image-picker": "^7.0.0",
     "react": "16.8.3",
     "react-native": "https://github.com/expo/react-native/archive/sdk-35.0.0.tar.gz",
     "whatwg-fetch": "^3.0.0"
