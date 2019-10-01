@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Platform } from 'react-native'
+import { Platform, SafeAreaView } from 'react-native'
 import {
   Toolbar,
   DocumentControlAction,
@@ -48,6 +48,10 @@ const toolbarLayout: Toolbar.Layout = [
   buildMaterialCommunityControlSpec(DebuggerActions.ERASE_DOCUMENT, 'delete-forever-outline'),
 ]
 
+const rootStyle = {
+  flex: 1
+}
+
 export class Editor extends Component<{}, State> {
   private async askCameraPermission() {
     const { status } = await Permissions.askAsync(Permissions.CAMERA)
@@ -95,6 +99,10 @@ export class Editor extends Component<{}, State> {
   }
 
   public render() {
-    return <Debugger pickOneImage={this.pickOneImage} toolbarLayout={toolbarLayout} />
+    return (
+      <SafeAreaView style={rootStyle}>
+        <Debugger pickOneImage={this.pickOneImage} toolbarLayout={toolbarLayout} />
+      </SafeAreaView>
+    )
   }
 }
