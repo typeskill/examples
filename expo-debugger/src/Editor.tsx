@@ -1,13 +1,13 @@
-import React, { Component } from 'react'
-import { Platform, SafeAreaView, View } from 'react-native'
+import React, { memo } from 'react'
+import { Platform } from 'react-native'
 import {
   Toolbar,
   DocumentControlAction,
   buildVectorIconControlSpec,
   GenericControlAction,
-  Document,
   Images,
   CONTROL_SEPARATOR,
+  Typer,
 } from '@typeskill/typer'
 import { Debugger, DebuggerActions } from '@typeskill/debugger'
 import * as Permissions from 'expo-permissions'
@@ -15,10 +15,6 @@ import * as ImagePicker from 'expo-image-picker'
 import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons'
 import { PermissionStatus } from 'expo-permissions'
 import { ImageInfo } from 'expo-image-picker/build/ImagePicker.types'
-
-interface State {
-  document: Document
-}
 
 type ImageAction = 'TAKE_PICTURE' | 'SELECT_FROM_GALLERY'
 
@@ -48,59 +44,53 @@ const toolbarLayout: Toolbar.Layout = [
   buildMaterialCommunityControlSpec(DebuggerActions.ERASE_DOCUMENT, 'delete-forever-outline'),
 ]
 
-const rootStyle = {
-  flex: 1
-}
-
-export class Editor extends Component<{}, State> {
-  private async askCameraPermission() {
-    const { status } = await Permissions.askAsync(Permissions.CAMERA)
-    if (status !== PermissionStatus.GRANTED) {
-      throw new Error(`Missing Camera permission. Status is: ${status}`)
-    }
-  }
-
-  private async askCameraRollPermission() {
-    const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL)
-    if (status !== PermissionStatus.GRANTED) {
-      throw new Error(`Missing Camera Roll permission. Status is: ${status}`)
-    }
-  }
-
-  private pickOneImage = async (options: ImageAction) => {
-    let response: ImagePicker.ImagePickerResult
-    if (options === 'SELECT_FROM_GALLERY') {
-      if (Platform.OS === 'ios') {
-        await this.askCameraRollPermission()
-      }
-      response = await ImagePicker.launchImageLibraryAsync({ mediaTypes: ImagePicker.MediaTypeOptions.Images })
-    } else {
-      await this.askCameraPermission()
-      await this.askCameraRollPermission()
-      response = await ImagePicker.launchCameraAsync({ mediaTypes: ImagePicker.MediaTypeOptions.Images })
-    }
-    if (response.cancelled) {
-      throw new Error('User cancelled.')
-    }
-    const imageInfo = response as ImageInfo
-    const description: Images.Description<ImageSource> = {
-      source: {
-        uri: imageInfo.uri,
-        name: imageInfo.uri,
-      },
-      width: imageInfo.width,
-      height: imageInfo.height,
-    }
-    return description
-  }
-
-  public handleOnDocumentUpdate = (document: Document) => {
-    this.setState({ document })
-  }
-
-  public render() {
-    return (
-      <Debugger pickOneImage={this.pickOneImage} toolbarLayout={toolbarLayout} />
-    )
+async function askCameraRollPermission() {
+  const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL)
+  if (status !== PermissionStatus.GRANTED) {
+    throw new Error(`Missing Camera Roll permission. Status is: ${status}`)
   }
 }
+
+async function askCameraPermission() {
+  const { status } = await Permissions.askAsync(Permissions.CAMERA)
+  if (status !== PermissionStatus.GRANTED) {
+    throw new Error(`Missing Camera permission. Status is: ${status}`)
+  }
+}
+
+async function pickImageAsync(options: ImageAction) {
+  let response: ImagePicker.ImagePickerResult
+  if (options === 'SELECT_FROM_GALLERY') {
+    if (Platform.OS === 'ios') {
+      await askCameraRollPermission()
+    }
+    response = await ImagePicker.launchImageLibraryAsync({ mediaTypes: ImagePicker.MediaTypeOptions.Images })
+  } else {
+    await askCameraPermission()
+    await askCameraRollPermission()
+    response = await ImagePicker.launchCameraAsync({ mediaTypes: ImagePicker.MediaTypeOptions.Images })
+  }
+  if (response.cancelled) {
+    throw new Error('User cancelled.')
+  }
+  const imageInfo = response as ImageInfo
+  const description: Images.Description<ImageSource> = {
+    source: {
+      uri: imageInfo.uri,
+      name: imageInfo.uri.substring(imageInfo.uri.lastIndexOf('/') + 1),
+    },
+    width: imageInfo.width,
+    height: imageInfo.height,
+  }
+  return description
+}
+
+const typerProps: Partial<Typer.Props<any>> = {
+  maxMediaBlockHeight: 250
+}
+
+export const Editor = memo(function Editor() {
+  return (
+    <Debugger typerProps={typerProps} pickOneImage={pickImageAsync} toolbarLayout={toolbarLayout} />
+  )
+})
