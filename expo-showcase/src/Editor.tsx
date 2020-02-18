@@ -1,16 +1,15 @@
-import React, { Component, useState, useMemo } from 'react'
+import React from 'react'
 import { View, KeyboardAvoidingView, SafeAreaView, Platform } from 'react-native'
 import {
-  Bridge,
   Typer,
   Toolbar,
   DocumentControlAction,
   buildVectorIconControlSpec,
-  buildBridge,
-  buildEmptyDocument,
   Document,
   Images,
   CONTROL_SEPARATOR,
+  useBridge,
+  useDocument
 } from '@typeskill/typer'
 import * as Permissions from 'expo-permissions'
 import * as ImagePicker from 'expo-image-picker'
@@ -89,8 +88,8 @@ async function pickOneImage (options?: ImageAction) {
 }
 
 export function Editor() {
-  const [document, setDocument] = useState(buildEmptyDocument())
-  const bridge = useMemo(() => buildBridge<ImageSource>(), [])
+  const [document, setDocument] = useDocument()
+  const bridge = useBridge<ImageSource>()
   return (
     <SafeAreaView style={theme.rootContainer}>
       <KeyboardAvoidingView behavior={Platform.OS === 'android' ? undefined : 'padding'} style={theme.flex} enabled>

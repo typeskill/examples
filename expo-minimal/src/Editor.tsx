@@ -1,12 +1,12 @@
-import React, { useState, useMemo } from 'react'
+import React from 'react'
 import { View, KeyboardAvoidingView, SafeAreaView, Platform } from 'react-native'
 import {
   Typer,
   Toolbar,
   DocumentControlAction,
   buildVectorIconControlSpec,
-  buildBridge,
-  buildEmptyDocument,
+  useBridge,
+  useDocument
 } from '@typeskill/typer'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { soberTheme, ICON_SIZE, ICON_INACTIVE_COLOR, ICON_ACTIVE_COLOR, SPACING } from './styles'
@@ -23,8 +23,8 @@ const toolbarLayout: Toolbar.Layout = [
 ]
 
 export function Editor() {
-  const [document, setDocument] = useState(buildEmptyDocument())
-  const bridge = useMemo(() => buildBridge(), [])
+  const [document, setDocument] = useDocument()
+  const bridge = useBridge()
   return (
     <SafeAreaView style={soberTheme.rootContainer}>
       <KeyboardAvoidingView behavior={Platform.select({ ios: 'padding' })} style={soberTheme.flex} enabled>
