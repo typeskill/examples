@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, useState, useMemo } from 'react'
 import { View, KeyboardAvoidingView, SafeAreaView, Platform } from 'react-native'
 import {
   Bridge,
@@ -48,85 +48,75 @@ const toolbarLayout: Toolbar.Layout = [
   }),
 ]
 
-export class Editor extends Component<{}, State> {
-  private bridge: Bridge<ImageSource> = buildBridge()
-
-  public state: State = {
-    document: buildEmptyDocument(),
+async function askCameraPermission() {
+  const { status } = await Permissions.askAsync(Permissions.CAMERA)
+  if (status !== PermissionStatus.GRANTED) {
+    throw new Error(`Missing Camera permission. Status is: ${status}`)
   }
+}
 
-  private async askCameraPermission() {
-    const { status } = await Permissions.askAsync(Permissions.CAMERA)
-    if (status !== PermissionStatus.GRANTED) {
-      throw new Error(`Missing Camera permission. Status is: ${status}`)
-    }
+async function askCameraRollPermission() {
+  const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL)
+  if (status !== PermissionStatus.GRANTED) {
+    throw new Error(`Missing Camera Roll permission. Status is: ${status}`)
   }
+}
 
-  private async askCameraRollPermission() {
-    const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL)
-    if (status !== PermissionStatus.GRANTED) {
-      throw new Error(`Missing Camera Roll permission. Status is: ${status}`)
+async function pickOneImage (options?: ImageAction) {
+  let response: ImagePicker.ImagePickerResult
+  if (options === 'SELECT_FROM_GALLERY') {
+    if (Platform.OS === 'ios') {
+      await askCameraRollPermission()
     }
+    response = await ImagePicker.launchImageLibraryAsync({ mediaTypes: ImagePicker.MediaTypeOptions.Images })
+  } else {
+    await askCameraPermission()
+    await askCameraRollPermission()
+    response = await ImagePicker.launchCameraAsync({ mediaTypes: ImagePicker.MediaTypeOptions.Images })
   }
-
-  private pickOneImage = async (options?: ImageAction) => {
-    let response: ImagePicker.ImagePickerResult
-    if (options === 'SELECT_FROM_GALLERY') {
-      if (Platform.OS === 'ios') {
-        await this.askCameraRollPermission()
-      }
-      response = await ImagePicker.launchImageLibraryAsync({ mediaTypes: ImagePicker.MediaTypeOptions.Images })
-    } else {
-      await this.askCameraPermission()
-      await this.askCameraRollPermission()
-      response = await ImagePicker.launchCameraAsync({ mediaTypes: ImagePicker.MediaTypeOptions.Images })
-    }
-    if (response.cancelled) {
-      throw new Error('User cancelled.')
-    }
-    const description: Images.Description<ImageSource> = {
-      source: {
-        uri: response.uri,
-        name: response.uri,
-      },
-      width: response.width,
-      height: response.height,
-    }
-    return description
+  if (response.cancelled) {
+    throw new Error('User cancelled.')
   }
-
-  public handleOnDocumentUpdate = (document: Document) => {
-    this.setState({ document })
+  const description: Images.Description<ImageSource> = {
+    source: {
+      uri: response.uri,
+      name: response.uri,
+    },
+    width: response.width,
+    height: response.height,
   }
+  return description
+}
 
-  public render() {
-    return (
-      <SafeAreaView style={theme.rootContainer}>
-        <KeyboardAvoidingView behavior={Platform.OS === 'android' ? undefined : 'padding'} style={theme.flex} enabled>
-          <Version />
-          <View style={theme.typerContainer}>
-            <Typer
-              document={this.state.document}
-              spacing={SPACING}
-              onDocumentUpdate={this.handleOnDocumentUpdate}
-              textStyle={theme.textStyle}
-              bridge={this.bridge}
-              maxMediaBlockHeight={300}
-            />
-          </View>
-          <Toolbar<ImageSource, ImageAction>
-            iconSize={ICON_SIZE}
-            activeButtonColor={ICON_ACTIVE_COLOR}
-            inactiveButtonColor={ICON_INACTIVE_COLOR}
-            separatorColor="transparent"
-            document={this.state.document}
-            layout={toolbarLayout}
-            contentContainerStyle={theme.toolbarContainer}
-            bridge={this.bridge}
-            pickOneImage={this.pickOneImage}
+export function Editor() {
+  const [document, setDocument] = useState(buildEmptyDocument())
+  const bridge = useMemo(() => buildBridge<ImageSource>(), [])
+  return (
+    <SafeAreaView style={theme.rootContainer}>
+      <KeyboardAvoidingView behavior={Platform.OS === 'android' ? undefined : 'padding'} style={theme.flex} enabled>
+        <Version />
+        <View style={theme.typerContainer}>
+          <Typer
+            document={document}
+            spacing={SPACING}
+            onDocumentUpdate={setDocument}
+            textStyle={theme.textStyle}
+            bridge={bridge}
+            maxMediaBlockHeight={300}
           />
-        </KeyboardAvoidingView>
-      </SafeAreaView>
-    )
-  }
+        </View>
+        <Toolbar<ImageSource, ImageAction>
+          iconSize={ICON_SIZE}
+          activeButtonColor={ICON_ACTIVE_COLOR}
+          inactiveButtonColor={ICON_INACTIVE_COLOR}
+          separatorColor="transparent"
+          document={document}
+          layout={toolbarLayout}
+          contentContainerStyle={theme.toolbarContainer}
+          bridge={bridge}
+          pickOneImage={pickOneImage}
+        />
+      </KeyboardAvoidingView>
+    </SafeAreaView>
+  )
 }
