@@ -8,19 +8,19 @@
     "validate:lint": "eslint --ext .ts --ext .tsx App.tsx 'src/'"
   },
   "dependencies": {
-    "@expo/vector-icons": "^10.0.1",
+    "@expo/vector-icons": "^10.0.0",
     "@types/expo": "^32.0.13",
-    "@types/react": "~16.8.25",
-    "@types/react-native": "^0.60.18",
-    "@typeskill/debugger": "^0.11.5",
+    "@types/react": "^16.9.0",
+    "@types/react-native": "^0.60.15",
+    "@typeskill/debugger": "^0.11.6",
     "@typeskill/typer": "^0.12.0-alpha.3",
-    "expo": "^35.0.0",
-    "expo-constants": "^7.0.0",
-    "expo-image-picker": "^7.0.0",
-    "react": "16.8.3",
-    "react-native": "https://github.com/expo/react-native/archive/sdk-35.0.0.tar.gz",
-    "react-native-gesture-handler": "~1.3.0",
-    "react-native-reanimated": "~1.2.0",
+    "expo": "^36.0.0",
+    "expo-constants": "~8.0.0",
+    "expo-image-picker": "~8.0.1",
+    "react": "16.9.0",
+    "react-native": "https://github.com/expo/react-native/archive/sdk-36.0.1.tar.gz",
+    "react-native-gesture-handler": "~1.5.0",
+    "react-native-reanimated": "~1.4.0",
     "react-native-tab-view": "^2.10.0",
     "whatwg-fetch": "^3.0.0"
   },
@@ -31,13 +31,13 @@
     "@typescript-eslint/parser": "^2.3.2",
     "@typeskill/eslint-config": "^1.1.1",
     "babel-plugin-transform-es2015-modules-commonjs": "^6.26.2",
-    "babel-preset-expo": "^6.0.0",
+    "babel-preset-expo": "^8.0.0",
     "eslint": "^6.5.1",
     "eslint-config-prettier": "^6.3.0",
     "eslint-plugin-prettier": "^3.1.1",
     "eslint-plugin-react": "^7.15.1",
     "prettier": "^1.18.2",
-    "typescript": "^3.4.5"
+    "typescript": "^3.7.2"
   },
   "private": true
 }
