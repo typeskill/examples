@@ -13,7 +13,7 @@
     "@types/react": "^16.9.0",
     "@types/react-native": "^0.60.15",
     "@typeskill/debugger": "^0.11.6",
-    "@typeskill/typer": "^0.12.0-alpha.3",
+    "@typeskill/typer": "^1.0.0",
     "expo": "^36.0.0",
     "expo-constants": "~8.0.0",
     "expo-image-picker": "~8.0.1",
